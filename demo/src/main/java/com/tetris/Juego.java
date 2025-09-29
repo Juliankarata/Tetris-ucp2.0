@@ -1,27 +1,31 @@
+// File: src/main/java/com/tetris/Juego.java
 package com.tetris;
 
 import java.util.Random;
 
 public class Juego {
-    private final Tablero tablero;
+    private final Board tablero;
     private final Reloj reloj;
     private boolean enEjecucion;
     private final Random random;
 
     public Juego(int ancho, int alto){
-        this.tablero = new Tablero(ancho, alto);
-        this.reloj = new Reloj();
-        this.enEjecucion = false;
-        this.random = new Random();
+        this(new Board(ancho, alto), new Reloj(), new Random());
     }
 
-    // Inicia el juego colocando la primera pieza
+    // Sobrecarga útil para tests (inyectar Random determinístico)
+    public Juego(Board tablero, Reloj reloj, Random random){
+        this.tablero = tablero;
+        this.reloj = reloj;
+        this.random = random;
+        this.enEjecucion = false;
+    }
+
     public void iniciar(){
         enEjecucion = true;
         crearYColocarPiezaAleatoria();
     }
 
-    // Avanza un tick: el reloj cuenta y la pieza cae una fila
     public void avanzarTick(){
         if(!enEjecucion) return;
         reloj.tick();
@@ -31,30 +35,26 @@ public class Juego {
         tablero.moverAbajo();
     }
 
-    // --- Métodos privados auxiliares ---
     private void crearYColocarPiezaAleatoria(){
         Pieza p = crearPiezaAleatoria();
-        // rotación aleatoria antes de ponerla
+        // Rotación aleatoria 0..3
         int rotaciones = random.nextInt(4);
-        for(int i=0;i<rotaciones;i++) p.rotarDerecha();
+        for(int i=0; i<rotaciones; i++) p.rotarDerecha();
         tablero.ponerPiezaActual(p);
     }
 
     private Pieza crearPiezaAleatoria(){
-        int n = random.nextInt(7);
-        switch(n){
-            case 0: return new PiezaI();
-            case 1: return new PiezaO();
-            case 2: return new PiezaT();
-            case 3: return new PiezaL();
-            case 4: return new PiezaJ();
-            case 5: return new PiezaS();
-            default: return new PiezaZ();
+        // SOLO 5 PIEZAS: I, O, T, L, Z (Perro)
+        switch(random.nextInt(5)){
+            case 0: return new PieceStick();   // I (palo)
+            case 1: return new PieceSquare();  // O (cuadrado)
+            case 2: return new PieceT();       // T
+            case 3: return new PieceL();       // L
+            default: return new PieceDog();    // Z (perro)
         }
     }
 
-    // --- Getters ---
-    public Tablero getTablero(){ return tablero; }
+    public Board getTablero(){ return tablero; }
     public Reloj getReloj(){ return reloj; }
     public boolean isEnEjecucion(){ return enEjecucion; }
 }

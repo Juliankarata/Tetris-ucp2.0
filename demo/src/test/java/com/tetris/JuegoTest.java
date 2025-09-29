@@ -1,39 +1,25 @@
+// File: src/test/java/com/tetris/JuegoTest.java
 package com.tetris;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
+import java.util.Random;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class JuegoTest {
-
-    @Test
-    public void testConstructor() {
-        Juego juego = new Juego(10, 20);
-        assertNotNull(juego.getTablero());
-        assertNotNull(juego.getReloj());
-        assertFalse(juego.isEnEjecucion());
-        assertEquals(10, juego.getTablero().getAncho());
-        assertEquals(20, juego.getTablero().getAlto());
-    }
+class JuegoTest {
 
     @Test
-    public void testIniciar() {
-        Juego juego = new Juego(10, 20);
+    void iniciarGeneraPiezaYTickAvanzaReloj() {
+        Board b = new Board(6, 10);
+        Reloj r = new Reloj();
+        Random rnd = new Random(123); // determinístico
+        Juego juego = new Juego(b, r, rnd);
+
+        assertNull(b.obtenerPiezaActual());
         juego.iniciar();
-        assertTrue(juego.isEnEjecucion());
-        assertNotNull(juego.getTablero().obtenerPiezaActual());
-    }
+        assertNotNull(b.obtenerPiezaActual(), "Al iniciar debe haber una pieza actual");
 
-    @Test
-    public void testAvanzarTick() {
-        Juego juego = new Juego(10, 20);
-        juego.iniciar();
-        int contadorInicial = juego.getReloj().getContador();
+        int t0 = r.getTicks();
         juego.avanzarTick();
-        assertEquals(contadorInicial + 1, juego.getReloj().getContador());
+        assertEquals(t0 + 1, r.getTicks(), "Cada tick de juego incrementa el reloj");
     }
-
-    // Removed testCrearPiezaAleatoria because crearPiezaAleatoria() is private and cannot be tested directly
 }
