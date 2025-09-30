@@ -24,7 +24,14 @@ public class Juego {
     public void iniciar(){
         enEjecucion = true;
         crearYColocarPiezaAleatoria();
+        System.out.println("Iniciando juego");
+       
     }
+    public void finalizar(){
+        enEjecucion = false;
+        System.out.println("Finalizando juego");
+    }
+
 
     public void avanzarTick(){
         if(!enEjecucion) return;
@@ -54,52 +61,12 @@ public class Juego {
         }
     }
 
+    // Método público para testing de generación aleatoria
+    public Pieza getRandomPiece(){
+        return crearPiezaAleatoria();
+    }
+
     public Board getTablero(){ return tablero; }
     public Reloj getReloj(){ return reloj; }
     public boolean isEnEjecucion(){ return enEjecucion; }
 }
-
-
-
-//Juego
-
-
-//Qué es: el orquestador del bucle del juego.
-
-//Estado interno:
-
-//Board tablero: donde se juega.
-
-//Reloj reloj: cuenta los ticks.
-
-//boolean enEjecucion: si está “corriendo”.
-
-//Random random: para aleatoriedad controlada (útil inyectarlo en tests).
-
-//Qué hace:
-
-//iniciar(): marca enEjecucion = true y crea/coloca la primera pieza.
-
-//avanzarTick(): si está en ejecución:
-
-//reloj.tick()
-
-//si no hay pieza activa (la anterior se fijó): crea una nueva
-
-//pide al Board bajar la pieza (moverAbajo())
-
-//Creación de piezas:
-
-//crearPiezaAleatoria(): elige entre 5 tipos (I/O/T/L/Z-perro).
-
-//crearYColocarPiezaAleatoria(): además del tipo, aplica rotación aleatoria (0..3) antes de llamar a tablero.ponerPiezaActual(...).
-
-//Para qué se usa: encapsula el “loop” del juego y deja al tablero la física/colisión. De esta forma, Juego queda muy legible: “sumar tick, asegurar pieza, pedir que baje”.
-
-//Cómo testearlo fácil:
-
-//Inyectá un Random con semilla fija y verificá que:
-
-//iniciar() deja una pieza activa.
-
-//avanzarTick() incrementa reloj y, eventualmente, cuando la pieza se fija, spawnea otra.
