@@ -21,14 +21,37 @@ public class Board {
     public int getAncho(){ return ancho; }
     public int getAlto(){ return alto; }
 
-    // Representación en texto (para debug/tests)
+    // Representación en texto (grilla fija + pieza actual)
     public String formato(){
         StringBuilder sb = new StringBuilder();
-        for(int r=0; r<alto; r++){
-            for(int c=0; c<ancho; c++){
-                sb.append(grilla[r][c] ? "X" : ".");
+
+        // Copia de la grilla
+        boolean[][] temp = new boolean[alto][ancho];
+        for (int r = 0; r < alto; r++) {
+            System.arraycopy(grilla[r], 0, temp[r], 0, ancho);
+        }
+
+        // Superponer la pieza actual
+        if (piezaActual != null) {
+            boolean[][] forma = piezaActual.obtenerForma();
+            for (int r = 0; r < forma.length; r++) {
+                for (int c = 0; c < forma[0].length; c++) {
+                    if (!forma[r][c]) continue;
+                    int grFila = piezaFila + r;
+                    int grCol  = piezaColumna + c;
+                    if (grFila >= 0 && grFila < alto && grCol >= 0 && grCol < ancho) {
+                        temp[grFila][grCol] = true;
+                    }
+                }
             }
-            sb.append('\n');
+        }
+
+        // Dibujar
+        for (int r = 0; r < alto; r++) {
+            for (int c = 0; c < ancho; c++) {
+                sb.append(temp[r][c] ? 'X' : '.');
+            }
+            if (r < alto - 1) sb.append('\n');
         }
         return sb.toString();
     }
@@ -38,7 +61,9 @@ public class Board {
         this.piezaActual = pieza;
         this.piezaFila = 0;
         this.piezaColumna = Math.max(0, (ancho - pieza.obtenerForma()[0].length) / 2);
-        // Si no entra, podrías validar con puedeEn(...) y lanzar excepción si falla.
+        if (!puedeEn(piezaFila, piezaColumna, piezaActual)) {
+            throw new IllegalStateException("No hay espacio para spawnear la pieza (game over).");
+        }
     }
 
     public Pieza obtenerPiezaActual(){ return piezaActual; }
@@ -61,7 +86,7 @@ public class Board {
         return puedeEn(piezaFila + 1, piezaColumna, piezaActual);
     }
 
-    // --------- Movimiento lateral (opcional, útil para tests/manual) ----------
+    // --------- Movimiento lateral ----------
     public boolean moverIzquierda(){
         if (piezaActual == null) return false;
         if (puedeEn(piezaFila, piezaColumna - 1, piezaActual)) {
@@ -97,7 +122,7 @@ public class Board {
         return false;
     }
 
-    // --------- Validación genérica de encaje ----------
+    // --------- Validación de encaje ----------
     private boolean puedeEn(int nuevaFila, int nuevaCol, Pieza pieza){
         boolean[][] forma = pieza.obtenerForma();
         int filas = forma.length;
@@ -180,3 +205,64 @@ public class Board {
         return copia;
     }
 }
+
+
+
+
+
+//Board (tablero)
+
+//Qué es: el corazón del juego. Mantiene:
+
+//La grilla fija (boolean[alto][ancho]) con los bloques ya asentados.
+
+//La pieza en caída (piezaActual) y su posición (piezaFila, piezaColumna) —la esquina superior izquierda de su “caja”.
+
+//Qué hace:
+
+//Spawnear/colocar una pieza: ponerPiezaActual(pieza) la ubica en la fila 0 y la centra horizontalmente según el ancho de su forma.
+
+//Mover abajo: moverAbajo() intenta bajar la pieza una fila.
+
+//Si puede (no sale ni choca): incrementa piezaFila y devuelve true.
+
+//Si no puede: fija la pieza (pasa su forma a la grilla), limpia líneas completas, pone piezaActual = null y devuelve false.
+
+//Chequear encaje: puedeMoverAbajo() delega en el verificador genérico puedeEn(nuevaFila, nuevaCol, pieza), que proyecta cada true de la forma a coordenadas de grilla y valida límites y colisión con grilla.
+
+//Movimiento lateral (opcional pero útil): moverIzquierda() / moverDerecha() usan puedeEn(...) para validar antes de mover.
+
+//Rotación segura: rotarActualDerecha() / rotarActualIzquierda() aplican la rotación y la revierten si la nueva forma no entra (sin wall-kicks avanzados: suficiente para el TP).
+
+//Fijar pieza: fijarPiezaEnGrilla() copia los true actuales de la forma a la grilla fija en (piezaFila + r, piezaColumna + c).
+
+//Limpiar líneas: eliminarLineasCompletas() recorre de abajo hacia arriba; si una fila está toda en true, la elimina, baja todas las filas superiores una posición,
+// vacía la fila 0 y rechequea la misma r (porque ahora contiene lo que bajó).
+
+//Cómo se usa en la práctica:
+
+//El Juego llama a ponerPiezaActual() al spawnear.
+
+//En cada tick, Juego llama a moverAbajo(). Si devuelve false, la pieza se asentó y Juego spawneará una nueva en el próximo tick.
+
+//Controles opcionales (izquierda/derecha/rotar) pueden invocar moverIzquierda(), moverDerecha(), rotarActual...() entre ticks.
+
+//Invariantes y garantías:
+
+//La grilla solo contiene bloques fijos (la pieza en caída nunca se “pinta” ahí hasta fijarse).
+
+//puedeEn(...) garantiza que nunca se salga de [0..alto-1] × [0..ancho-1] ni pise un true fijo.
+
+//La limpieza de líneas conserva el orden de lo que estaba arriba (simplemente desciende).
+
+//Complejidad (aproximada):
+
+//Movimientos y chequeos: O(celdas de la forma), típicamente constante pequeña (≤ 16).
+
+//Limpieza de líneas: O(alto × ancho) en el peor caso (cuando hay que desplazar muchas filas).
+
+//Pitfalls a evitar (y cómo lo resolviste):
+
+//Saltearse líneas al limpiar: se corrige con el r++ después de bajar filas, para re-evaluar la “nueva” fila que cayó en la misma r.
+
+//Dibujar la pieza activa dentro de la grilla: se evitó separando pieza-actual de grilla-fija, simplificando colisión y limpieza.

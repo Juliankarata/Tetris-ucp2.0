@@ -20,3 +20,15 @@ public class PieceStick extends Pieza {
         return base;
     }
 }
+
+//PieceStick (I / Palo)
+
+//Qué es: la pieza I, representada dentro de una caja 4×4 para que la rotación sea cómoda.
+
+//Cómo funciona:
+
+//Orientaciones 0 y 2: horizontal (cuatro true en la segunda fila de la caja).
+
+//Orientaciones 1 y 3: vertical (cuatro true en la tercera columna).
+
+//Por qué 4×4: usar una caja más grande evita “recortes” al rotar y simplifica los chequeos de encaje en el tablero (el “dibujo” siempre cabe en su caja sin desbordar).
