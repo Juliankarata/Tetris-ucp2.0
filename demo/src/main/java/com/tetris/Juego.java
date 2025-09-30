@@ -8,7 +8,7 @@ public class Juego {
     private final Reloj reloj;
     private boolean enEjecucion;
     private final Random random;
-
+    //atributos privados,y son instancias de otras clases (Board, Reloj, Random)
     public Juego(int ancho, int alto){
         this(new Board(ancho, alto), new Reloj(), new Random());
     }
