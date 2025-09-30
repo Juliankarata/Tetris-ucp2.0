@@ -1,8 +1,8 @@
 // File: src/test/java/com/tetris/RelojTest.java
 package com.tetris;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 class RelojTest {
 
@@ -15,6 +15,7 @@ class RelojTest {
     @Test
     void tickIncrementaEnUno() {
         Reloj r = new Reloj();
+        //Se aplica el constructor, objeto reloj, y este mismo posee el componente de tick
         r.tick();
         assertEquals(1, r.getTicks(), "Después de un tick, debe valer 1");
         r.tick();
