@@ -28,3 +28,12 @@ public class PieceT extends Pieza {
         return b;
     }
 }
+
+//PieceT (T)
+
+//Qué es: la pieza T en una caja 3×3.
+
+//Cómo funciona: según orientacion, coloca tres bloques en línea (la “base”) 
+//y uno centrado por encima/derecha/izquierda según el caso. Las cuatro orientaciones están contempladas.
+
+//Notas: es útil para testear que rotación y encaje se comportan bien, porque su forma no es simétrica como el cuadrado.

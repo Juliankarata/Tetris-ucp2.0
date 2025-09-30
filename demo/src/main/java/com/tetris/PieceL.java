@@ -29,3 +29,12 @@ public class PieceL extends Pieza {
         return b;
     }
 }
+
+
+//PieceL (L)
+
+//Qué es: la pieza en “L”, caja 3×3.
+
+//Cómo funciona: combina una barra de 3 bloques con un bloque adicional en un extremo, rotando por las cuatro orientaciones.
+
+//Rol en tests: ayuda a verificar que rotaciones y movimientos laterales no atraviesen bordes ni celdas ocupadas.

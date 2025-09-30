@@ -24,3 +24,16 @@ public class PieceDog extends Pieza {
         return base;
     }
 }
+
+
+//PieceDog (Z / “perro”)
+
+//Qué es: la pieza Z (apodo “perro”) en caja 3×3.
+
+//Cómo funciona: alterna entre:
+
+//Orientaciones 0/2: “Z” horizontal (dos arriba desplazados a la derecha, dos abajo desplazados a la izquierda).
+
+//Orientaciones 1/3: “Z” vertical.
+
+//Rol: útil para testear colisiones diagonales/adyacentes, y limpieza de líneas por su huella escalonada.
