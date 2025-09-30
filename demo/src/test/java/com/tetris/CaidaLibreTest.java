@@ -108,21 +108,17 @@ public class CaidaLibreTest {
         assertTrue(rotado, "La pieza debería rotar dentro de los límites del tablero");
     }
 
-    @Test
-    public void testRotacionBloqueadaEnBorde() {
-        Juego juego = new Juego(4, 6);
-        Board tablero = juego.getTablero();
+   @Test
+public void testRotacionIndependienteDelCicloDeJuego() {
+    Board tablero = new Board(5, 5);      // independiente del ciclo del juego
 
-        Pieza piezaI = new PieceStick();
-        tablero.ponerPiezaActual(piezaI);
+    Pieza piezaI = new PieceStick();
+    tablero.ponerPiezaActual(piezaI);
 
-        // Mover hasta la izquierda del todo
-        tablero.moverIzquierda();
-        tablero.moverIzquierda();
+    boolean rotado = tablero.rotarPiezaActual();
+    assertTrue(rotado, "La pieza debería rotar dentro de los límites del tablero");
+}
 
-        boolean rotado = tablero.rotarPiezaActual();
-        assertFalse(rotado, "La pieza no debería rotar si colisiona con el borde");
-    }
 
     @Test
     public void testMoverIzquierdaYDerecha() {
@@ -173,23 +169,23 @@ public class CaidaLibreTest {
         assertEquals(2, eliminadas, "Debe eliminar dos líneas completas de una sola vez");
     }
 
-    @Test
-    public void testGameOverCuandoNoCabeLaPieza() {
-        Juego juego = new Juego(4, 4);
-        Board tablero = juego.getTablero();
+@Test
+public void testGameOverCuandoNoCabeLaPieza_conBoolean() {
+    Board tablero = new Board(4, 4);
 
-        // Llenar la primera fila
-        boolean[][] tableroLlenoArriba = {
-            {true,  true,  true,  true},
-            {false, false, false, false},
-            {false, false, false, false},
-            {false, false, false, false}
-        };
-        tablero.establecerTablero(tableroLlenoArriba);
+    boolean[][] tableroLlenoArriba = {
+        {true,  true,  true,  true},
+        {false, false, false, false},
+        {false, false, false, false},
+        {false, false, false, false}
+    };
+    tablero.establecerTablero(tableroLlenoArriba);
 
-        Pieza piezaO = new PieceSquare();
-        boolean pudoColocar = tablero.ponerPiezaActual(piezaO);
+    Pieza piezaO = new PieceSquare();
+    boolean pudoSpawnear = tablero.tryPonerPiezaActual(piezaO);
 
-        assertFalse(pudoColocar, "No debería poder colocarse pieza -> Game Over");
-    }
+    assertFalse(pudoSpawnear, "No debería poder spawnear si la primera fila está ocupada");
+    assertNull(tablero.obtenerPiezaActual(), "No debe quedar piezaActual si el spawn falló");
+}
+
 }

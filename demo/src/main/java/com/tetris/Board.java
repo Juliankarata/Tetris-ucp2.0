@@ -57,14 +57,6 @@ public class Board {
     }
 
     // Coloca una nueva pieza en el tablero (centrada arriba)
-    public void ponerPiezaActual(Pieza pieza){
-        this.piezaActual = pieza;
-        this.piezaFila = 0;
-        this.piezaColumna = Math.max(0, (ancho - pieza.obtenerForma()[0].length) / 2);
-        if (!puedeEn(piezaFila, piezaColumna, piezaActual)) {
-            throw new IllegalStateException("No hay espacio para spawnear la pieza (game over).");
-        }
-    }
 
     public Pieza obtenerPiezaActual(){ return piezaActual; }
 
@@ -121,6 +113,24 @@ public class Board {
         piezaActual.rotarDerecha(); // revertir
         return false;
     }
+    // en Board.java
+public boolean rotarPiezaActual() {
+    if (piezaActual == null) return false;
+
+    // probamos primero rotar a la derecha
+    piezaActual.rotarDerecha();
+    int[] dx = {0, -1, 1, -2, 2}; // wall-kicks simples
+    for (int d : dx) {
+        if (puedeEn(piezaFila, piezaColumna + d, piezaActual)) {
+            piezaColumna += d;
+            return true;
+        }
+    }
+    // no entró: revertimos
+    piezaActual.rotarIzquierda();
+    return false;
+}
+
 
     // --------- Validación de encaje ----------
     private boolean puedeEn(int nuevaFila, int nuevaCol, Pieza pieza){
@@ -141,6 +151,26 @@ public class Board {
         }
         return true;
     }
+
+    // Board.java
+public boolean tryPonerPiezaActual(Pieza pieza) {
+    this.piezaActual = pieza;
+    this.piezaFila = 0;
+    this.piezaColumna = Math.max(0, (ancho - pieza.obtenerForma()[0].length) / 2);
+    if (!puedeEn(piezaFila, piezaColumna, piezaActual)) {
+        this.piezaActual = null; // revertir
+        return false;
+    }
+    return true;
+}
+
+// mantener el existente que lanza excepción:
+public void ponerPiezaActual(Pieza pieza){
+    if (!tryPonerPiezaActual(pieza)) {
+        throw new IllegalStateException("No hay espacio para spawnear la pieza (game over).");
+    }
+}
+
 
     // Fija la pieza en la grilla
     private void fijarPiezaEnGrilla(){
