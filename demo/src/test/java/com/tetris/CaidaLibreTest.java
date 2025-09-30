@@ -2,10 +2,17 @@ package com.tetris;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import java.lang.reflect.*;
 
 public class CaidaLibreTest {
 
+    // --- Helpers ---
+    private void dejarCaerPieza(Board tablero) {
+        while (tablero.obtenerPiezaActual() != null) {
+            tablero.moverAbajo();
+        }
+    }
+
+    // --- Tests originales ---
     @Test
     public void testPiezaOCaidaLibre() {
         Juego juego = new Juego(4, 6);
@@ -14,16 +21,9 @@ public class CaidaLibreTest {
         Pieza piezaO = new PieceSquare(); 
         tablero.ponerPiezaActual(piezaO);
 
-        boolean aterrizo = false;
-        for (int i = 0; i < 20; i++) {
-            tablero.moverAbajo();
-            if (tablero.obtenerPiezaActual() == null) {
-                aterrizo = true;
-                break;
-            }
-        }
+        dejarCaerPieza(tablero);
 
-        assertTrue(aterrizo, "La pieza O debería aterrizar (caída libre)");
+        assertNull(tablero.obtenerPiezaActual(), "La pieza O debería haber aterrizado");
     }
 
     @Test
@@ -31,17 +31,15 @@ public class CaidaLibreTest {
         Juego juego = new Juego(4, 6);
         Board tablero = juego.getTablero();
 
-
         Pieza piezaO = new PieceSquare();
         tablero.ponerPiezaActual(piezaO);
-        while (tablero.obtenerPiezaActual() != null) {
-            tablero.moverAbajo();
-        }
+        dejarCaerPieza(tablero);
 
         Pieza piezaI = new PieceStick();
         tablero.ponerPiezaActual(piezaI);
+
         boolean colisiono = false;
-        for (int i = 0; i < 20; i++) {
+        while (tablero.obtenerPiezaActual() != null) {
             boolean pudoMover = tablero.moverAbajo();
             if (!pudoMover) {
                 colisiono = true;
@@ -60,16 +58,9 @@ public class CaidaLibreTest {
         Pieza piezaI = new PieceStick();
         tablero.ponerPiezaActual(piezaI);
 
-        boolean aterrizo = false;
-        for (int i = 0; i < 20; i++) {
-            tablero.moverAbajo();
-            if (tablero.obtenerPiezaActual() == null) {
-                aterrizo = true;
-                break;
-            }
-        }
+        dejarCaerPieza(tablero);
 
-        assertTrue(aterrizo, "La pieza I debería aterrizar (caída libre)");
+        assertNull(tablero.obtenerPiezaActual(), "La pieza I debería haber aterrizado");
     }
 
     @Test
@@ -86,7 +77,6 @@ public class CaidaLibreTest {
         tablero.establecerTablero(tableroInicial);
 
         int eliminadas = tablero.eliminarLineasCompletas();
-
         assertEquals(1, eliminadas, "Debe eliminar exactamente una línea completa");
 
         boolean[][] tableroResultante = tablero.obtenerTablero();
@@ -98,13 +88,108 @@ public class CaidaLibreTest {
             {false, true,  false, false}
         };
 
-        assertArrayEquals(esperado[0], tableroResultante[0], "La fila 0 debe quedar vacía");
-        assertArrayEquals(esperado[1], tableroResultante[1], "La fila 1 debe quedar vacía");
-        assertArrayEquals(esperado[2], tableroResultante[2], "La fila 2 debe quedar vacía");
-        assertArrayEquals(esperado[3], tableroResultante[3], "La fila 3 debe contener la pieza desplazada");
-
-        // Comprobación adicional: la fila completamente vacía ahora está al tope
-        assertFalse(tableroResultante[0][0], "La primera celda debe estar vacía luego del corrimiento");
+        assertArrayEquals(esperado[0], tableroResultante[0], "Fila 0 incorrecta");
+        assertArrayEquals(esperado[1], tableroResultante[1], "Fila 1 incorrecta");
+        assertArrayEquals(esperado[2], tableroResultante[2], "Fila 2 incorrecta");
+        assertArrayEquals(esperado[3], tableroResultante[3], "Fila 3 incorrecta");
     }
 
-}   
+    // --- Tests nuevos ---
+
+    @Test
+    public void testRotacionDentroDelTablero() {
+        Juego juego = new Juego(5, 5);
+        Board tablero = juego.getTablero();
+
+        Pieza piezaI = new PieceStick();
+        tablero.ponerPiezaActual(piezaI);
+
+        boolean rotado = tablero.rotarPiezaActual();
+        assertTrue(rotado, "La pieza debería rotar dentro de los límites del tablero");
+    }
+
+    @Test
+    public void testRotacionBloqueadaEnBorde() {
+        Juego juego = new Juego(4, 6);
+        Board tablero = juego.getTablero();
+
+        Pieza piezaI = new PieceStick();
+        tablero.ponerPiezaActual(piezaI);
+
+        // Mover hasta la izquierda del todo
+        tablero.moverIzquierda();
+        tablero.moverIzquierda();
+
+        boolean rotado = tablero.rotarPiezaActual();
+        assertFalse(rotado, "La pieza no debería rotar si colisiona con el borde");
+    }
+
+    @Test
+    public void testMoverIzquierdaYDerecha() {
+        Juego juego = new Juego(6, 6);
+        Board tablero = juego.getTablero();
+
+        Pieza piezaO = new PieceSquare();
+        tablero.ponerPiezaActual(piezaO);
+
+        boolean pudoIzquierda = tablero.moverIzquierda();
+        boolean pudoDerecha = tablero.moverDerecha();
+
+        assertTrue(pudoIzquierda, "Debe poder moverse a la izquierda");
+        assertTrue(pudoDerecha, "Debe poder moverse a la derecha");
+    }
+
+    @Test
+    public void testNoPuedeMoverFueraDelTablero() {
+        Juego juego = new Juego(4, 6);
+        Board tablero = juego.getTablero();
+
+        Pieza piezaO = new PieceSquare();
+        tablero.ponerPiezaActual(piezaO);
+
+        // Mover varias veces hacia la izquierda
+        boolean pudoSeguir = true;
+        for (int i = 0; i < 10; i++) {
+            pudoSeguir = tablero.moverIzquierda();
+        }
+
+        assertFalse(pudoSeguir, "No debe poder moverse fuera del tablero");
+    }
+
+    @Test
+    public void testEliminaMultiplesLineas() {
+        Board tablero = new Board(4, 4);
+
+        boolean[][] tableroInicial = {
+            {true,  true,  true,  true},
+            {true,  true,  true,  true},
+            {false, false, false, false},
+            {false, false, false, false}
+        };
+
+        tablero.establecerTablero(tableroInicial);
+        int eliminadas = tablero.eliminarLineasCompletas();
+
+        assertEquals(2, eliminadas, "Debe eliminar dos líneas completas de una sola vez");
+    }
+
+    @Test
+    public void testGameOverCuandoNoCabeLaPieza() {
+        Juego juego = new Juego(4, 4);
+        Board tablero = juego.getTablero();
+
+        // Llenar la primera fila
+        boolean[][] tableroLlenoArriba = {
+            {true,  true,  true,  true},
+            {false, false, false, false},
+            {false, false, false, false},
+            {false, false, false, false}
+        };
+        tablero.establecerTablero(tableroLlenoArriba);
+
+        Pieza piezaO = new PieceSquare();
+        boolean pudoColocar = tablero.ponerPiezaActual(piezaO);
+
+        assertFalse(pudoColocar, "No debería poder colocarse pieza -> Game Over");
+    }
+}
