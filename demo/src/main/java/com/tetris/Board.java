@@ -6,12 +6,16 @@ import java.util.Arrays;
 public class Board {
     private final int ancho;
     private final int alto;
-    private boolean[][] grilla; // true = celda ocupada
+    private final boolean[][] grilla; // true = celda ocupada fija
+
     private Pieza piezaActual;
     private int piezaFila;     // fila superior donde está la pieza actual
     private int piezaColumna;  // columna izquierda donde está la pieza actual
 
+    private int lineCount = 0; // líneas eliminadas acumuladas
+
     public Board(int ancho, int alto){
+        if (ancho <= 0 || alto <= 0) throw new IllegalArgumentException("Tamaño inválido");
         this.ancho = ancho;
         this.alto = alto;
         this.grilla = new boolean[alto][ancho];
@@ -20,8 +24,13 @@ public class Board {
 
     public int getAncho(){ return ancho; }
     public int getAlto(){ return alto; }
+    public int getLineCount(){ return lineCount; }
 
-    // Representación en texto (grilla fija + pieza actual)
+    /** Posición actual de la pieza (útil para tests/UI) */
+    public int getPiezaFila(){ return piezaFila; }
+    public int getPiezaColumna(){ return piezaColumna; }
+
+    /** Representación en texto (grilla fija + pieza actual superpuesta) */
     public String formato(){
         StringBuilder sb = new StringBuilder();
 
@@ -56,11 +65,35 @@ public class Board {
         return sb.toString();
     }
 
-    // Coloca una nueva pieza en el tablero (centrada arriba)
+    // ---------- Spawn de pieza ----------
+    /** Intenta poner la pieza actual centrada arriba. Devuelve si pudo. */
+    public boolean tryPonerPiezaActual(Pieza pieza) {
+        if (pieza == null) return false;
+        this.piezaActual = pieza;
+        boolean[][] forma = pieza.obtenerForma();
+        int anchoForma = forma[0].length;
+
+        this.piezaFila = 0;
+        this.piezaColumna = Math.max(0, (ancho - anchoForma) / 2);
+
+        if (!puedeEn(piezaFila, piezaColumna, piezaActual)) {
+            this.piezaActual = null; // revertir
+            return false;
+        }
+        return true;
+    }
+
+    /** Pone la pieza actual o lanza excepción (game over). */
+    public void ponerPiezaActual(Pieza pieza){
+        if (!tryPonerPiezaActual(pieza)) {
+            throw new IllegalStateException("No hay espacio para spawnear la pieza (game over).");
+        }
+    }
 
     public Pieza obtenerPiezaActual(){ return piezaActual; }
 
-    // --------- Movimiento vertical ----------
+    // ---------- Movimiento vertical ----------
+    /** Baja la pieza 1 celda. Si no puede, la fija y limpia líneas. */
     public boolean moverAbajo(){
         if(piezaActual == null) return false;
         if(puedeMoverAbajo()){
@@ -68,17 +101,19 @@ public class Board {
             return true;
         } else {
             fijarPiezaEnGrilla();
-            eliminarLineasCompletas();
+            int eliminadas = eliminarLineasCompletas();
+            lineCount += eliminadas;
             piezaActual = null;
             return false;
         }
     }
 
     public boolean puedeMoverAbajo(){
+        if (piezaActual == null) return false;
         return puedeEn(piezaFila + 1, piezaColumna, piezaActual);
     }
 
-    // --------- Movimiento lateral ----------
+    // ---------- Movimiento lateral ----------
     public boolean moverIzquierda(){
         if (piezaActual == null) return false;
         if (puedeEn(piezaFila, piezaColumna - 1, piezaActual)) {
@@ -97,42 +132,40 @@ public class Board {
         return false;
     }
 
-    // --------- Rotación segura (revierte si no entra) ----------
-    public boolean rotarActualDerecha(){
-        if (piezaActual == null) return false;
-        piezaActual.rotarDerecha();
-        if (puedeEn(piezaFila, piezaColumna, piezaActual)) return true;
-        piezaActual.rotarIzquierda(); // revertir
-        return false;
+    // ---------- Rotación ----------
+    /** Rotación segura con wall-kicks simples (0, -1, +1, -2, +2). */
+    public boolean rotarPiezaActualDerecha() {
+        return rotarConKicks(true);
     }
 
-    public boolean rotarActualIzquierda(){
-        if (piezaActual == null) return false;
-        piezaActual.rotarIzquierda();
-        if (puedeEn(piezaFila, piezaColumna, piezaActual)) return true;
-        piezaActual.rotarDerecha(); // revertir
-        return false;
+    public boolean rotarPiezaActualIzquierda() {
+        return rotarConKicks(false);
     }
-    // en Board.java
-public boolean rotarPiezaActual() {
-    if (piezaActual == null) return false;
 
-    // probamos primero rotar a la derecha
-    piezaActual.rotarDerecha();
-    int[] dx = {0, -1, 1, -2, 2}; // wall-kicks simples
-    for (int d : dx) {
-        if (puedeEn(piezaFila, piezaColumna + d, piezaActual)) {
-            piezaColumna += d;
-            return true;
+    /** Conserva métodos con nombre original para compatibilidad */
+    public boolean rotarActualDerecha(){ return rotarPiezaActualDerecha(); }
+    public boolean rotarActualIzquierda(){ return rotarPiezaActualIzquierda(); }
+
+    private boolean rotarConKicks(boolean derecha){
+        if (piezaActual == null) return false;
+
+        // aplicar rotación
+        if (derecha) piezaActual.rotarDerecha(); else piezaActual.rotarIzquierda();
+
+        int[] dx = {0, -1, 1, -2, 2}; // wall-kicks simples en X
+        for (int d : dx) {
+            if (puedeEn(piezaFila, piezaColumna + d, piezaActual)) {
+                piezaColumna += d;
+                return true;
+            }
         }
+
+        // revertir si no entró
+        if (derecha) piezaActual.rotarIzquierda(); else piezaActual.rotarDerecha();
+        return false;
     }
-    // no entró: revertimos
-    piezaActual.rotarIzquierda();
-    return false;
-}
 
-
-    // --------- Validación de encaje ----------
+    // ---------- Validación de encaje ----------
     private boolean puedeEn(int nuevaFila, int nuevaCol, Pieza pieza){
         boolean[][] forma = pieza.obtenerForma();
         int filas = forma.length;
@@ -145,49 +178,30 @@ public boolean rotarPiezaActual() {
                 int grCol  = nuevaCol + c;
                 // límites
                 if(grFila < 0 || grFila >= alto || grCol < 0 || grCol >= ancho) return false;
-                // colisión
+                // colisión con bloque fijo
                 if(grilla[grFila][grCol]) return false;
             }
         }
         return true;
     }
 
-    // Board.java
-public boolean tryPonerPiezaActual(Pieza pieza) {
-    this.piezaActual = pieza;
-    this.piezaFila = 0;
-    this.piezaColumna = Math.max(0, (ancho - pieza.obtenerForma()[0].length) / 2);
-    if (!puedeEn(piezaFila, piezaColumna, piezaActual)) {
-        this.piezaActual = null; // revertir
-        return false;
-    }
-    return true;
-}
-
-// mantener el existente que lanza excepción:
-public void ponerPiezaActual(Pieza pieza){
-    if (!tryPonerPiezaActual(pieza)) {
-        throw new IllegalStateException("No hay espacio para spawnear la pieza (game over).");
-    }
-}
-
-
-    // Fija la pieza en la grilla
+    // ---------- Fijar pieza y limpieza ----------
     private void fijarPiezaEnGrilla(){
+        if (piezaActual == null) return;
         boolean[][] forma = piezaActual.obtenerForma();
         for(int r=0; r<forma.length; r++){
             for(int c=0; c<forma[0].length; c++){
-                if(forma[r][c]){
-                    int grFila = piezaFila + r;
-                    int grCol = piezaColumna + c;
-                    if(grFila >= 0 && grFila < alto && grCol >= 0 && grCol < ancho){
-                        grilla[grFila][grCol] = true;
-                    }
+                if(!forma[r][c]) continue;
+                int grFila = piezaFila + r;
+                int grCol  = piezaColumna + c;
+                if(grFila >= 0 && grFila < alto && grCol >= 0 && grCol < ancho){
+                    grilla[grFila][grCol] = true;
                 }
             }
         }
     }
 
+    /** Elimina todas las líneas completas y devuelve cuántas fueron (no acumula). */
     public int eliminarLineasCompletas() {
         int eliminadas = 0;
 
@@ -210,7 +224,8 @@ public void ponerPiezaActual(Pieza pieza){
         return eliminadas;
     }
 
-    // Carga un estado inicial validando dimensiones (deep copy)
+    // ---------- Utilidades para tests ----------
+    /** Carga un estado inicial validando dimensiones (deep copy). */
     public void establecerTablero(boolean[][] tableroInicial) {
         if (tableroInicial == null || tableroInicial.length != alto) {
             throw new IllegalArgumentException("Alto inválido para el estado inicial");
@@ -219,14 +234,11 @@ public void ponerPiezaActual(Pieza pieza){
             if (tableroInicial[r] == null || tableroInicial[r].length != ancho) {
                 throw new IllegalArgumentException("Ancho inválido en la fila " + r);
             }
-            if (grilla[r] == null || grilla[r].length != ancho) {
-                grilla[r] = new boolean[ancho];
-            }
             System.arraycopy(tableroInicial[r], 0, grilla[r], 0, ancho);
         }
     }
 
-    // Devuelve una copia del tablero (deep copy)
+    /** Devuelve una copia de la grilla fija (deep copy). */
     public boolean[][] obtenerTablero() {
         boolean[][] copia = new boolean[alto][ancho];
         for (int r = 0; r < alto; r++) {
@@ -235,64 +247,3 @@ public void ponerPiezaActual(Pieza pieza){
         return copia;
     }
 }
-
-
-
-
-
-//Board (tablero)
-
-//Qué es: el corazón del juego. Mantiene:
-
-//La grilla fija (boolean[alto][ancho]) con los bloques ya asentados.
-
-//La pieza en caída (piezaActual) y su posición (piezaFila, piezaColumna) —la esquina superior izquierda de su “caja”.
-
-//Qué hace:
-
-//Spawnear/colocar una pieza: ponerPiezaActual(pieza) la ubica en la fila 0 y la centra horizontalmente según el ancho de su forma.
-
-//Mover abajo: moverAbajo() intenta bajar la pieza una fila.
-
-//Si puede (no sale ni choca): incrementa piezaFila y devuelve true.
-
-//Si no puede: fija la pieza (pasa su forma a la grilla), limpia líneas completas, pone piezaActual = null y devuelve false.
-
-//Chequear encaje: puedeMoverAbajo() delega en el verificador genérico puedeEn(nuevaFila, nuevaCol, pieza), que proyecta cada true de la forma a coordenadas de grilla y valida límites y colisión con grilla.
-
-//Movimiento lateral (opcional pero útil): moverIzquierda() / moverDerecha() usan puedeEn(...) para validar antes de mover.
-
-//Rotación segura: rotarActualDerecha() / rotarActualIzquierda() aplican la rotación y la revierten si la nueva forma no entra (sin wall-kicks avanzados: suficiente para el TP).
-
-//Fijar pieza: fijarPiezaEnGrilla() copia los true actuales de la forma a la grilla fija en (piezaFila + r, piezaColumna + c).
-
-//Limpiar líneas: eliminarLineasCompletas() recorre de abajo hacia arriba; si una fila está toda en true, la elimina, baja todas las filas superiores una posición,
-// vacía la fila 0 y rechequea la misma r (porque ahora contiene lo que bajó).
-
-//Cómo se usa en la práctica:
-
-//El Juego llama a ponerPiezaActual() al spawnear.
-
-//En cada tick, Juego llama a moverAbajo(). Si devuelve false, la pieza se asentó y Juego spawneará una nueva en el próximo tick.
-
-//Controles opcionales (izquierda/derecha/rotar) pueden invocar moverIzquierda(), moverDerecha(), rotarActual...() entre ticks.
-
-//Invariantes y garantías:
-
-//La grilla solo contiene bloques fijos (la pieza en caída nunca se “pinta” ahí hasta fijarse).
-
-//puedeEn(...) garantiza que nunca se salga de [0..alto-1] × [0..ancho-1] ni pise un true fijo.
-
-//La limpieza de líneas conserva el orden de lo que estaba arriba (simplemente desciende).
-
-//Complejidad (aproximada):
-
-//Movimientos y chequeos: O(celdas de la forma), típicamente constante pequeña (≤ 16).
-
-//Limpieza de líneas: O(alto × ancho) en el peor caso (cuando hay que desplazar muchas filas).
-
-//Pitfalls a evitar (y cómo lo resolviste):
-
-//Saltearse líneas al limpiar: se corrige con el r++ después de bajar filas, para re-evaluar la “nueva” fila que cayó en la misma r.
-
-//Dibujar la pieza activa dentro de la grilla: se evitó separando pieza-actual de grilla-fija, simplificando colisión y limpieza.

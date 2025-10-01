@@ -1,6 +1,28 @@
 // File: src/main/java/com/tetris/PieceL.java
 package com.tetris;
 
+/**
+ * Pieza L en bounding box de 3x3.
+ *
+ * Orientaciones:
+ * - 0: base horizontal abajo con pie a la derecha
+ *   [ ][ ][X]
+ *   [X][X][X]
+ *
+ * - 1: base vertical izquierda
+ *   [X][ ]
+ *   [X][ ]
+ *   [X][X]
+ *
+ * - 2: base horizontal arriba con pie a la izquierda
+ *   [X][X][X]
+ *   [X][ ]
+ *
+ * - 3: base vertical derecha
+ *   [ ][X]
+ *   [ ][X]
+ *   [X][X]
+ */
 public class PieceL extends Pieza {
     public PieceL(){ super(3,3); }
 
@@ -29,12 +51,3 @@ public class PieceL extends Pieza {
         return b;
     }
 }
-
-
-//PieceL (L)
-
-//Qué es: la pieza en “L”, caja 3×3.
-
-//Cómo funciona: combina una barra de 3 bloques con un bloque adicional en un extremo, rotando por las cuatro orientaciones.
-
-//Rol en tests: ayuda a verificar que rotaciones y movimientos laterales no atraviesen bordes ni celdas ocupadas.
