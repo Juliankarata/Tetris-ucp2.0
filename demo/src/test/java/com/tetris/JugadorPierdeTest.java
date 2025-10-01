@@ -2,7 +2,6 @@ package com.tetris;
 
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 
 public class JugadorPierdeTest {
@@ -21,10 +20,12 @@ public class JugadorPierdeTest {
 
         Reloj reloj = new Reloj();
         Random rnd = new Random(123);
-        Tetris Tetris = new Tetris(tablero, reloj, rnd);
+        Tetris juego = new Tetris(tablero, reloj, rnd);
 
-        // Al iniciar, intenta colocar una pieza aleatoria, pero no puede porque la fila superior está llena
-        assertThrows(IllegalStateException.class, () -> Tetris.class.getMethod("iniciar").invoke(null),
-            "Debe lanzar IllegalStateException cuando no hay espacio para colocar la pieza inicial (jugador pierde)");
+        Tetris.iniciar(juego);
+
+        // El juego debe quedar detenido y no debe haber pieza activa
+        org.junit.jupiter.api.Assertions.assertFalse(juego.isEnEjecucion(), "El juego debe quedar detenido si no hay espacio para la pieza inicial");
+        org.junit.jupiter.api.Assertions.assertNull(tablero.obtenerPiezaActual(), "No debe haber pieza activa si no pudo spawnear");
     }
 }

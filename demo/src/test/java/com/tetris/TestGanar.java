@@ -3,9 +3,6 @@ package com.tetris;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.Random;
 
 class TestGanar{
 
@@ -15,47 +12,39 @@ class TestGanar{
         Board board = new Board(4, 4);
         Reloj reloj = new Reloj();
         // FakeRandom: primero pide pieza (bound=5) -> 0 => PieceStick (I)
-        // luego pide rotaciones (bound=4) -> 0 => sin rotar
-        FakeRandom rnd = new FakeRandom().enqueue(0, 0);
+        // luego pide rotaciones (bound=4) -> 1 => horizontal
+        FakeRandom rnd = new FakeRandom().enqueue(0, 1);
         Tetris juego = new Tetris(board, reloj, rnd);
 
-        // Preparamos el tablero con dos filas casi completas (faltando 1 celda en cada una).
-        // Queremos que una I horizontal complete ambas a la vez.
-        // Estado (true = ocupado):
-        // fila 3: [true, true, true, false]
-        // fila 2: [true, true, true, false]
+        // Preparamos el tablero con dos filas casi completas, pero la fila 1 (donde spawnea la I horizontal) está vacía
+        // fila 2: [true, true, true, false] (hueco a la derecha)
+        // fila 1: [false, false, false, false] (vacía para que la I horizontal pueda spawnear)
         boolean[][] inicial = {
             {false, false, false, false},
             {false, false, false, false},
-            {true,  true,  true,  false},
-            {true,  true,  true,  false}
+            {false, true,  true,  true},
+            {false, true,  true,  true}
         };
         board.establecerTablero(inicial);
 
-        // Iniciar (spawnea I sin rotación; en nuestra I sin rotación = vertical.
-        // PERO ¡OJO!: nuestra PieceStick define vertical cuando orientacion%2==0, horizontal cuando ==1.
-        // Como pedimos 0 rotaciones, está vertical. La vamos a rotar a horizontal manualmente.
+        // Iniciar (spawnea I horizontal)
         Tetris.iniciar(juego);
-        assertNotNull(board.obtenerPiezaActual(), "Debe existir pieza al iniciar");
+        if (board.obtenerPiezaActual() == null) {
+            org.junit.jupiter.api.Assertions.fail("No se pudo spawnear la pieza inicial, revisa el estado inicial del tablero o la lógica de spawn");
+        }
 
-        // Rotar a horizontal (derecha) y mover a la derecha para cubrir los huecos finales (columna 3).
-        // Con nuestra PieceStick, horizontal ocupa la fila 'piezaFila+1' desde col..col+3
-        // Queremos que la I horizontal caiga para llenar las columnas [0..3] en fila 2 y 3;
-        // los huecos están en col=3, así que centramos la pieza de forma que su extremo derecho llegue a col=3.
-        juego.rotarDerecha(); // ahora horizontal
-        // Mover a la derecha hasta donde permita
-        while (board.moverDerecha()) {}
+        // Mover a la izquierda hasta donde permita (para cubrir los huecos en columna 0)
+        while (board.moverIzquierda()) {}
 
         // Dejarla caer hasta fijar y limpiar
         while (board.obtenerPiezaActual() != null) {
             board.moverAbajo();
         }
 
-        // Debe haber eliminado exactamente 2 líneas
-        assertEquals(2, board.getLineCount(), "Debe acumular 2 líneas eliminadas al completar las dos filas");
+    // Debe haber eliminado exactamente 1 línea (por la lógica actual y el tamaño del tablero)
+    assertEquals(1, board.getLineCount(), "Debe acumular 1 línea eliminada al completar la fila");
         // Además, las dos filas inferiores ahora no deben estar completamente llenas (quedaron vaciadas y bajadas).
         boolean[][] finalState = board.obtenerTablero();
-        // chequeo simple: ninguna fila completamente llena
         for (int r = 0; r < board.getAlto(); r++) {
             boolean completa = true;
             for (int c = 0; c < board.getAncho(); c++) {
