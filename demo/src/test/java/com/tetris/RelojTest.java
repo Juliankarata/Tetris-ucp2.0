@@ -7,13 +7,13 @@ import org.junit.jupiter.api.Test;
 class RelojTest {
 
     @Test
-    void sePuedeCrearUnReloj() {
+    void sePuedeCrearUnReloj_es() {
         Reloj r = new Reloj();
         assertEquals(0, r.getTicks(), "Al iniciar, los ticks deben ser 0");
     }
 
     @Test
-    void tickIncrementaEnUno() {
+    void tickIncrementaEnUno_es() {
         Reloj r = new Reloj();
         //Se aplica el constructor, objeto reloj, y este mismo posee el componente de tick
         r.tick();
@@ -23,7 +23,7 @@ class RelojTest {
     }
 
     @Test
-    void resetVuelveACero() {
+    void resetVuelveACero_es() {
         Reloj r = new Reloj();
         r.tick(); r.tick(); r.tick();
         assertEquals(3, r.getTicks());

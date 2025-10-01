@@ -22,7 +22,7 @@ public class ColisionPiezasTest {
     }
 
     @Test
-    public void colisionVertical_L_contra_Cuadrada() {
+    public void colisionVertical_LContraCuadrada() {
         // Tablero con altura suficiente para evitar problemas de spawn
         Board board = new Board(5, 6);
 
@@ -67,7 +67,7 @@ public class ColisionPiezasTest {
     }
 
     @Test
-    public void colisionLateral_L_contra_bloqueFijo() {
+    public void colisionLateral_LContraBloqueFijo() {
         Board board = new Board(6, 6);
 
         // 1) Fijamos un cuadrado a la izquierda

@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 class JuegoTest {
 
     @Test
-    void iniciarGeneraPiezaYTickAvanzaReloj() {
+    void iniciarGeneraPiezaYTickAvanzaReloj_es() {
         Board b = new Board(6, 10);
         Reloj r = new Reloj();
         Random rnd = new Random(123); // determinístico
@@ -28,7 +28,7 @@ class JuegoTest {
     }
 
     @Test
-    void PiecesAleatory() {
+    void piezasAleatorias() {
         Random rnd = new Random(42); // semilla fija para reproducibilidad
         Tetris juego = new Tetris(new Board(6, 10), new Reloj(), rnd);
 

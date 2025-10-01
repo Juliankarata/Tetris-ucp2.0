@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 public class JugadorPierdeTest {
 
     @Test
-    public void testJugadorPierdeCuandoNoPuedeColocarPieza() {
+    public void jugadorPierdeCuandoNoPuedeColocarPieza() {
         Board tablero = new Board(4, 4);
         // Llenar la fila superior para que no quepa ninguna pieza
         boolean[][] tableroLleno = {

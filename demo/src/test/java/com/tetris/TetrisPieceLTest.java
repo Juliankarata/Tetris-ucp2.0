@@ -32,7 +32,7 @@ public class TetrisPieceLTest {
     }
 
     @Test
-    void startSpawneaPieceLConOrientacion0() {
+    void iniciarSpawneaLConOrientacion0() {
         // Tablero chico 3x4: la L 3x3 entra perfecta
         Board board = new Board(3, 4);
         Reloj reloj = new Reloj();
@@ -50,7 +50,7 @@ public class TetrisPieceLTest {
     }
 
     @Test
-    void rotateRightYLuegoLeftVuelvenALaOrientacionInicial_PieceL() {
+    void rotarDerechaYLuegoIzquierdaVuelvenALaOrientacionInicial_L() {
         Board board = new Board(3, 4);
         Reloj reloj = new Reloj();
         // Forzar PieceL (3) y 0 rotaciones
@@ -70,7 +70,7 @@ public class TetrisPieceLTest {
     }
 
     @Test
-    void unaLPuedeCompletarYLimpiarUnaLinea() {
+    void unaLPuedeCompletarYLimpiarLinea() {
         // Diseño: en 3x4 vacío, una L en orientación 0 cae hasta el fondo y llena la fila inferior (3 celdas) -> limpia 1 línea
         Board board = new Board(3, 4);
         Reloj reloj = new Reloj();

@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TetrisTest {
 
     @Test
-    void startDebeSpawnearPiezaYQuedarEnEjecucion() {
+    void iniciarDebeSpawnearPiezaYQuedarEnEjecucion() {
         Tetris t = new Tetris(10, 20);
 
         // Antes de iniciar no tenemos estado “vivo”, pero al iniciar debe haber pieza
@@ -22,7 +22,7 @@ public class TetrisTest {
     }
 
     @Test
-    void tickDebeIncrementarElReloj() {
+    void tickDebeIncrementarElReloj_es() {
         Tetris t = new Tetris(10, 20);
         t.start();
         long t0 = t.state().ticks();
@@ -34,7 +34,7 @@ public class TetrisTest {
     }
 
     @Test
-    void rotateLeftRightCambianOrientacionYVuelvenAlOrigen() {
+    void rotarIzqDerCambianOrientacionYVuelvenAlOrigen() {
         Tetris t = new Tetris(10, 20);
         t.start();
 
@@ -52,7 +52,7 @@ public class TetrisTest {
     }
 
     @Test
-    void stateDevuelveCopiaDeLaGrillaNoUnaVistaViva() {
+    void stateDevuelveCopiaDeLaGrillaNoUnaVistaViva_es() {
         Tetris t = new Tetris(6, 8);
         t.start();
 
@@ -73,7 +73,7 @@ public class TetrisTest {
     }
 
     @Test
-    void startEnTableroDemasiadoChicoDebeFallarGameOver() {
+    void iniciarEnTableroDemasiadoChicoDebeFallarGameOver() {
         // En 1x1 ninguna pieza cabe: el juego no puede iniciar (game over inmediato)
         Tetris t = new Tetris(1, 1);
         t.start();

@@ -14,7 +14,7 @@ public class CaidaLibreTest {
 
     // --- Tests originales ---
     @Test
-    public void testPiezaOCaidaLibre() {
+    public void piezaOCaidaLibre() {
         Tetris juego = new  Tetris(4, 6);
         Board tablero = juego.getTablero();
 
@@ -27,7 +27,7 @@ public class CaidaLibreTest {
     }
 
     @Test
-    public void testColisionEntrePiezas() {
+    public void colisionEntrePiezas() {
         Tetris juego = new Tetris(4, 6);
         Board tablero = juego.getTablero();
 
@@ -51,7 +51,7 @@ public class CaidaLibreTest {
     }
 
     @Test
-    public void testPiezaICaidaLibre() {
+    public void piezaICaidaLibre() {
         Tetris juego = new Tetris(4, 6);
         Board tablero = juego.getTablero();
 
@@ -95,7 +95,7 @@ public class CaidaLibreTest {
     }
 
     @Test
-    public void testRotacionDentroDelTablero_Stick() {
+    public void rotacionDentroDelTablero_Palo() {
         Tetris juego = new Tetris(5, 5);
         Board tablero = juego.getTablero();
 
@@ -109,7 +109,7 @@ public class CaidaLibreTest {
     }
 
     @Test
-    public void testMoverIzquierdaYDerecha() {
+    public void moverIzquierdaYDerecha() {
         Tetris juego = new Tetris(6, 6);
         Board tablero = juego.getTablero();
 
@@ -124,7 +124,7 @@ public class CaidaLibreTest {
     }
 
     @Test
-    public void testNoPuedeMoverFueraDelTablero() {
+    public void noPuedeMoverFueraDelTablero() {
         Tetris juego = new Tetris(4, 6);
         Board tablero = juego.getTablero();
 
@@ -141,7 +141,7 @@ public class CaidaLibreTest {
     }
 
     @Test
-    public void testEliminaMultiplesLineas() {
+    public void eliminaMultiplesLineas() {
         Board tablero = new Board(4, 4);
 
         boolean[][] tableroInicial = {
@@ -158,7 +158,7 @@ public class CaidaLibreTest {
     }
 
 @Test
-public void testGameOverCuandoNoCabeLaPieza_conBoolean() {
+public void gameOverCuandoNoCabeLaPieza_conBoolean() {
     Board tablero = new Board(4, 4);
 
     boolean[][] tableroLlenoArriba = {
@@ -179,7 +179,7 @@ public void testGameOverCuandoNoCabeLaPieza_conBoolean() {
 
 
 @Test
-public void testRotacionBloqueadaPorBorde_Stick() {
+public void rotacionBloqueadaPorBorde_Palo() {
     Tetris juego = new Tetris(4, 4);
     Board tablero = juego.getTablero();
 

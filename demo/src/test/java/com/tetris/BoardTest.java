@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 public class BoardTest {
 
     @Test
-    public void testEliminarLineasCompletas() {
+    public void eliminaLineasCompletas() {
         Board tablero = new Board(4, 4);
 
         boolean[][] tableroInicial = {
@@ -39,7 +39,7 @@ public class BoardTest {
     }
 
     @Test
-    public void testColisionEntrePiezas() {
+    public void colisionEntrePiezas() {
         Board tablero = new Board(4, 6);
 
         Pieza piezaO = new PieceSquare();
@@ -64,7 +64,7 @@ public class BoardTest {
     }
 
     @Test
-    public void testMovimientosLateralesYLímites() {
+    public void movimientosLateralesYLimites() {
         Board tablero = new Board(4, 6);
 
         Pieza piezaO = new PieceSquare();

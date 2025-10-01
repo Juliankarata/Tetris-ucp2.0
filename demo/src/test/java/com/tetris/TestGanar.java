@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class TestGanar{
 
     @Test
-    void tetrisGanaAlEliminarDosLineasConUnaIHorizontal() {
+    void ganaAlEliminarDosLineasConUnaIHorizontal() {
         // Tablero 4x4 para facilitar dos filas completas
         Board board = new Board(4, 4);
         Reloj reloj = new Reloj();
@@ -55,7 +55,7 @@ class TestGanar{
     }
 
     @Test
-    void tetrisFallaAlIniciar() {
+    void fallaAlIniciar() {
         Board board = new Board(4, 4);
         Reloj reloj = new Reloj();
         // No importa la pieza, ninguna entra si la fila 0 está llena y la 1 también en parte

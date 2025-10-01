@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
-Test set: com.tetris.JuegoTest
+Test set: com.tetris.BoardEdgeCasesTest
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in com.tetris.JuegoTest
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.167 s -- in com.tetris.BoardEdgeCasesTest
