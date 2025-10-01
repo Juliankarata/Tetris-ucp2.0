@@ -1,28 +1,7 @@
 // File: src/main/java/com/tetris/PieceT.java
 package com.tetris;
 
-/**
- * Pieza T en bounding box de 3x3.
- *
- * Orientaciones:
- * - 0: base abajo
- *   [ ][X][ ]
- *   [X][X][X]
- *
- * - 1: base a la izquierda
- *   [X][ ]
- *   [X][X]
- *   [X][ ]
- *
- * - 2: base arriba
- *   [X][X][X]
- *   [ ][X][ ]
- *
- * - 3: base a la derecha
- *   [ ][X]
- *   [X][X]
- *   [ ][X]
- */
+
 public class PieceT extends Pieza {
     public PieceT(){ super(3,3); }
 

@@ -1,15 +1,30 @@
 {
-    // Use IntelliSense para saber los atributos posibles.
-    // Mantenga el puntero para ver las descripciones de los existentes atributos.
-    // Para más información, visite: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "chrome",
+            "name": "Launch Chrome",
             "request": "launch",
-            "name": "Iniciar Chrome para localhost",
+            "type": "chrome",
             "url": "http://localhost:8080",
             "webRoot": "${workspaceFolder}"
+        },
+        {
+            "type": "java",
+            "name": "Launch Main",
+            "request": "launch",
+            "mainClass": "com.tetris.Main",
+            "projectName": "tp2-tetris",
+            "cwd": "${workspaceFolder}/demo"
+        },
+        {
+            "type": "java",
+            "name": "Run Tests",
+            "request": "launch",
+            "mainClass": "org.junit.platform.console.ConsoleLauncher",
+            "args": "--scan-classpath --classpath \"${workspaceFolder}/demo/target/test-classes;${workspaceFolder}/demo/target/classes\"",
+            "cwd": "${workspaceFolder}/demo",
+            "console": "integratedTerminal",
+            "preLaunchTask": "maven: test-compile"
         }
     ]
 }

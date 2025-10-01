@@ -2,10 +2,7 @@ package com.tetris;
 
 import java.util.Random;
 
-/**
- * Fachada principal (según UML).
- * Exponde: start(), state(), rotateLeft(), rotateRight(), tick().
- */
+
 public class Tetris {
     private final Juego juego;
 

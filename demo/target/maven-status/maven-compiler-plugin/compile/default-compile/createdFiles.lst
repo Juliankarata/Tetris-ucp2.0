@@ -1,0 +1,9 @@
+com\tetris\PieceL.class
+com\tetris\Board.class
+com\tetris\PieceSquare.class
+com\tetris\PieceStick.class
+com\tetris\Tetris.class
+com\tetris\Tetris$Estado.class
+com\tetris\PieceT.class
+com\tetris\IRotator.class
+com\tetris\PieceDog.class

@@ -1,4 +1,4 @@
-// File: src/main/java/com/tetris/Reloj.java
+
 package com.tetris;
 
 /**

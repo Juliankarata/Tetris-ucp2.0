@@ -218,14 +218,14 @@ public class Board {
                 }
                 // fila superior vacía
                 Arrays.fill(grilla[0], false);
-                r++; // re-chequear esta misma fila luego del corrimiento
+                r++; 
             }
         }
         return eliminadas;
     }
 
     // ---------- Utilidades para tests ----------
-    /** Carga un estado inicial validando dimensiones (deep copy). */
+    
     public void establecerTablero(boolean[][] tableroInicial) {
         if (tableroInicial == null || tableroInicial.length != alto) {
             throw new IllegalArgumentException("Alto inválido para el estado inicial");
@@ -238,7 +238,7 @@ public class Board {
         }
     }
 
-    /** Devuelve una copia de la grilla fija (deep copy). */
+    
     public boolean[][] obtenerTablero() {
         boolean[][] copia = new boolean[alto][ancho];
         for (int r = 0; r < alto; r++) {
