@@ -4,24 +4,26 @@ package com.tetris;
 import java.util.Arrays;
 
 public class Board {
-    private final int ancho;
-    private final int alto;
+    private final int ancho; // Ancho del tablero (número de columnas)
+    private final int alto;  // Alto del tablero (número de filas)
     private final boolean[][] grilla; // true = celda ocupada fija
 
-    private Pieza piezaActual;
-    private int piezaFila;     // fila superior donde está la pieza actual
-    private int piezaColumna;  // columna izquierda donde está la pieza actual
+    private Pieza piezaActual; // Pieza que está actualmente en juego
+    private int piezaFila;     // Fila superior donde está la pieza actual
+    private int piezaColumna;  // Columna izquierda donde está la pieza actual
 
-    private int lineCount = 0; // líneas eliminadas acumuladas
+    private int lineCount = 0; // Contador acumulado de líneas eliminadas del tablero. Se incrementa cada vez que se eliminan líneas completas tras fijar una pieza.
 
+    // Constructor: inicializa el tablero con el tamaño dado
     public Board(int ancho, int alto){
-        if (ancho <= 0 || alto <= 0) throw new IllegalArgumentException("Tamaño inválido");
+        if (ancho <= 0 || alto <= 0) throw new IllegalArgumentException("Tamaño inválido"); // Valida tamaño
         this.ancho = ancho;
         this.alto = alto;
-        this.grilla = new boolean[alto][ancho];
-        for(int i=0; i<alto; i++) Arrays.fill(this.grilla[i], false);
+        this.grilla = new boolean[alto][ancho]; // Crea la matriz de celdas
+        for(int i=0; i<alto; i++) Arrays.fill(this.grilla[i], false); // Inicializa todas las celdas como vacías
     }
 
+    // Métodos getter para ancho, alto y líneas eliminadas
     public int getAncho(){ return ancho; }
     public int getAlto(){ return alto; }
     public int getLineCount(){ return lineCount; }
@@ -45,17 +47,17 @@ public class Board {
             boolean[][] forma = piezaActual.obtenerForma();
             for (int r = 0; r < forma.length; r++) {
                 for (int c = 0; c < forma[0].length; c++) {
-                    if (!forma[r][c]) continue;
+                    if (!forma[r][c]) continue; // Solo si hay bloque en esa celda de la pieza
                     int grFila = piezaFila + r;
                     int grCol  = piezaColumna + c;
                     if (grFila >= 0 && grFila < alto && grCol >= 0 && grCol < ancho) {
-                        temp[grFila][grCol] = true;
+                        temp[grFila][grCol] = true; // Marca la celda como ocupada por la pieza
                     }
                 }
             }
         }
 
-        // Dibujar
+        // Dibujar la grilla como texto (X = ocupada, . = vacía)
         for (int r = 0; r < alto; r++) {
             for (int c = 0; c < ancho; c++) {
                 sb.append(temp[r][c] ? 'X' : '.');
@@ -74,7 +76,7 @@ public class Board {
         int anchoForma = forma[0].length;
 
         this.piezaFila = 0;
-        this.piezaColumna = Math.max(0, (ancho - anchoForma) / 2);
+        this.piezaColumna = Math.max(0, (ancho - anchoForma) / 2); // Centra la pieza
 
         if (!puedeEn(piezaFila, piezaColumna, piezaActual)) {
             this.piezaActual = null; // revertir
@@ -100,10 +102,10 @@ public class Board {
             piezaFila++;
             return true;
         } else {
-            fijarPiezaEnGrilla();
-            int eliminadas = eliminarLineasCompletas();
-            lineCount += eliminadas;
-            piezaActual = null;
+            fijarPiezaEnGrilla(); // Fija la pieza en la grilla
+            int eliminadas = eliminarLineasCompletas(); // Elimina líneas completas
+            lineCount += eliminadas; // Suma al contador de líneas
+            piezaActual = null; // Ya no hay pieza activa
             return false;
         }
     }
@@ -146,6 +148,7 @@ public class Board {
     public boolean rotarActualDerecha(){ return rotarPiezaActualDerecha(); }
     public boolean rotarActualIzquierda(){ return rotarPiezaActualIzquierda(); }
 
+    // Lógica de rotación con wall-kicks (intenta varios desplazamientos en X)
     private boolean rotarConKicks(boolean derecha){
         if (piezaActual == null) return false;
 
@@ -166,6 +169,7 @@ public class Board {
     }
 
     // ---------- Validación de encaje ----------
+    // Verifica si una pieza cabe en la posición dada
     private boolean puedeEn(int nuevaFila, int nuevaCol, Pieza pieza){
         boolean[][] forma = pieza.obtenerForma();
         int filas = forma.length;
@@ -186,6 +190,7 @@ public class Board {
     }
 
     // ---------- Fijar pieza y limpieza ----------
+    // Fija la pieza actual en la grilla
     private void fijarPiezaEnGrilla(){
         if (piezaActual == null) return;
         boolean[][] forma = piezaActual.obtenerForma();
@@ -195,7 +200,7 @@ public class Board {
                 int grFila = piezaFila + r;
                 int grCol  = piezaColumna + c;
                 if(grFila >= 0 && grFila < alto && grCol >= 0 && grCol < ancho){
-                    grilla[grFila][grCol] = true;
+                    grilla[grFila][grCol] = true; // Marca la celda como ocupada
                 }
             }
         }
@@ -218,14 +223,14 @@ public class Board {
                 }
                 // fila superior vacía
                 Arrays.fill(grilla[0], false);
-                r++; 
+                r++; // Revisa de nuevo la misma fila (por si hay varias seguidas)
             }
         }
         return eliminadas;
     }
 
     // ---------- Utilidades para tests ----------
-    
+    // Permite establecer el estado del tablero (para tests)
     public void establecerTablero(boolean[][] tableroInicial) {
         if (tableroInicial == null || tableroInicial.length != alto) {
             throw new IllegalArgumentException("Alto inválido para el estado inicial");
@@ -238,7 +243,7 @@ public class Board {
         }
     }
 
-    
+    // Devuelve una copia del estado actual del tablero
     public boolean[][] obtenerTablero() {
         boolean[][] copia = new boolean[alto][ancho];
         for (int r = 0; r < alto; r++) {

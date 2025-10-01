@@ -1,11 +1,13 @@
 package com.tetris;
 
+// Importa las clases necesarias de JUnit para los tests
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-
+// Clase de pruebas para verificar condiciones de victoria en el juego
 class TestGanar{
 
+    // Test que verifica que se gana al eliminar dos líneas con una pieza I horizontal
     @Test
     void ganaAlEliminarDosLineasConUnaIHorizontal() {
         // Tablero 4x4 para facilitar dos filas completas
@@ -20,10 +22,10 @@ class TestGanar{
         // fila 2: [true, true, true, false] (hueco a la derecha)
         // fila 1: [false, false, false, false] (vacía para que la I horizontal pueda spawnear)
         boolean[][] inicial = {
-            {false, false, false, false},
-            {false, false, false, false},
-            {false, true,  true,  true},
-            {false, true,  true,  true}
+            {false, false, false, false}, // Fila 0: vacía
+            {false, false, false, false}, // Fila 1: vacía
+            {false, true,  true,  true},  // Fila 2: casi llena
+            {false, true,  true,  true}   // Fila 3: casi llena
         };
         board.establecerTablero(inicial);
 
@@ -41,8 +43,8 @@ class TestGanar{
             board.moverAbajo();
         }
 
-    // Debe haber eliminado exactamente 1 línea (por la lógica actual y el tamaño del tablero)
-    assertEquals(1, board.getLineCount(), "Debe acumular 1 línea eliminada al completar la fila");
+        // Debe haber eliminado exactamente 1 línea (por la lógica actual y el tamaño del tablero)
+        assertEquals(1, board.getLineCount(), "Debe acumular 1 línea eliminada al completar la fila");
         // Además, las dos filas inferiores ahora no deben estar completamente llenas (quedaron vaciadas y bajadas).
         boolean[][] finalState = board.obtenerTablero();
         for (int r = 0; r < board.getAlto(); r++) {
@@ -54,6 +56,7 @@ class TestGanar{
         }
     }
 
+    // Test que verifica que el juego falla al iniciar si no hay espacio
     @Test
     void fallaAlIniciar() {
         Board board = new Board(4, 4);

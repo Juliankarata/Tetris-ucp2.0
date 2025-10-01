@@ -5,21 +5,21 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class PieceOrientationsTest {
     @Test
-    void paloTodasLasOrientaciones() {
-        PieceStick palo = new PieceStick();
+    void pieceStickTodasLasOrientaciones() {
+        PieceStick pieceStick = new PieceStick();
         for (int i = 0; i < 4; i++) {
-            boolean[][] forma = palo.obtenerForma();
+            boolean[][] forma = pieceStick.obtenerForma();
             assertNotNull(forma);
-            palo.rotarDerecha();
+            pieceStick.rotarDerecha();
         }
     }
     @Test
-    void cuadradoTodasLasOrientaciones() {
-        PieceSquare cuadrado = new PieceSquare();
+    void squareTodasLasOrientaciones() {
+        PieceSquare square = new PieceSquare();
         for (int i = 0; i < 4; i++) {
-            boolean[][] forma = cuadrado.obtenerForma();
+            boolean[][] forma = square.obtenerForma();
             assertNotNull(forma);
-            cuadrado.rotarDerecha();
+            square.rotarDerecha();
         }
     }
     @Test
@@ -41,12 +41,12 @@ public class PieceOrientationsTest {
         }
     }
     @Test
-    void perroTodasLasOrientaciones() {
-        PieceDog perro = new PieceDog();
+    void piecedogTodasLasOrientaciones() {
+        PieceDog piecedog = new PieceDog();
         for (int i = 0; i < 4; i++) {
-            boolean[][] forma = perro.obtenerForma();
+            boolean[][] forma = piecedog.obtenerForma();
             assertNotNull(forma);
-            perro.rotarDerecha();
+            piecedog.rotarDerecha();
         }
     }
 }
