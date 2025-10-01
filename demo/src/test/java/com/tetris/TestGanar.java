@@ -17,7 +17,7 @@ class TestGanar{
         // FakeRandom: primero pide pieza (bound=5) -> 0 => PieceStick (I)
         // luego pide rotaciones (bound=4) -> 0 => sin rotar
         FakeRandom rnd = new FakeRandom().enqueue(0, 0);
-        Juego juego = new Juego(board, reloj, rnd);
+        Tetris juego = new Tetris(board, reloj, rnd);
 
         // Preparamos el tablero con dos filas casi completas (faltando 1 celda en cada una).
         // Queremos que una I horizontal complete ambas a la vez.
@@ -42,7 +42,7 @@ class TestGanar{
         // Con nuestra PieceStick, horizontal ocupa la fila 'piezaFila+1' desde col..col+3
         // Queremos que la I horizontal caiga para llenar las columnas [0..3] en fila 2 y 3;
         // los huecos están en col=3, así que centramos la pieza de forma que su extremo derecho llegue a col=3.
-        juego.rotateRight(); // ahora horizontal
+        juego.rotarDerecha(); // ahora horizontal
         // Mover a la derecha hasta donde permita
         while (board.moverDerecha()) {}
 
@@ -71,7 +71,7 @@ class TestGanar{
         Reloj reloj = new Reloj();
         // No importa la pieza, ninguna entra si la fila 0 está llena y la 1 también en parte
         FakeRandom rnd = new FakeRandom().enqueue(1, 0); // O y 0 rotaciones, por ejemplo
-        Juego juego = new Juego(board, reloj, rnd);
+        Tetris juego = new Tetris(board, reloj, rnd);
 
         // Llenamos la fila superior para impedir el spawn (y parte de la segunda para robustez)
         boolean[][] bloqueado = {

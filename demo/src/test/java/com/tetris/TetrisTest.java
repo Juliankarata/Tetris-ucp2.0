@@ -42,11 +42,11 @@ public class TetrisTest {
         assertNotNull(p0, "Debe haber una pieza para poder rotar");
         int oriInicial = p0.getOrientacion();
 
-        t.rotateRight();
+        t.rotarDerecha();
         int ori1 = t.state().piezaActual().getOrientacion();
         assertEquals((oriInicial + 1) % 4, ori1, "rotateRight() debe sumar +1 mod 4");
 
-        t.rotateLeft();
+        t.rotarIzquierda();
         int ori2 = t.state().piezaActual().getOrientacion();
         assertEquals(oriInicial, ori2, "rotateLeft() tras rotateRight() debe volver a la orientación inicial");
     }

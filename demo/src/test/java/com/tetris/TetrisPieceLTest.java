@@ -60,11 +60,11 @@ public class TetrisPieceLTest {
         t.start();
 
         int ori0 = t.state().piezaActual().getOrientacion();
-        t.rotateRight();
+        t.rotarDerecha();
         int ori1 = t.state().piezaActual().getOrientacion();
         assertEquals((ori0 + 1) % 4, ori1, "rotateRight() debe sumar +1 mod 4");
 
-        t.rotateLeft();
+        t.rotarIzquierda();
         int ori2 = t.state().piezaActual().getOrientacion();
         assertEquals(ori0, ori2, "rotateLeft() tras rotateRight() debe volver a la orientación inicial");
     }

@@ -16,7 +16,7 @@ class JuegoTest {
         Board b = new Board(6, 10);
         Reloj r = new Reloj();
         Random rnd = new Random(123); // determinístico
-        Juego juego = new Juego(b, r, rnd);
+        Tetris juego = new Tetris(b, r, rnd);
 
         assertNull(b.obtenerPiezaActual());
         juego.iniciar();
@@ -30,7 +30,7 @@ class JuegoTest {
     @Test
     void PiecesAleatory() {
         Random rnd = new Random(42); // semilla fija para reproducibilidad
-        Juego juego = new Juego(new Board(6, 10), new Reloj(), rnd);
+        Tetris juego = new Tetris(new Board(6, 10), new Reloj(), rnd);
 
         // Generar varias piezas aleatorias y verificar que sean instancias de las clases esperadas
         for (int i = 0; i < 20; i++) {
