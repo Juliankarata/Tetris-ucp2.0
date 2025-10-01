@@ -1,6 +1,6 @@
 package com.tetris;
 
-/** Clase base abstracta para todas las piezas. */
+
 public abstract class Pieza implements IRotator {
     protected int filas;
     protected int columnas;

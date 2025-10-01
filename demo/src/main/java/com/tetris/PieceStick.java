@@ -1,23 +1,7 @@
 // File: src/main/java/com/tetris/PieceStick.java
 package com.tetris;
 
-/**
- * Pieza I (stick o palo).
- * Bounding box de 4x4 para que la rotación sea simétrica.
- *
- * Orientaciones:
- * - 0 y 2: vertical
- *   [ ][X][ ][ ]
- *   [ ][X][ ][ ]
- *   [ ][X][ ][ ]
- *   [ ][X][ ][ ]
- *
- * - 1 y 3: horizontal
- *   [ ][ ][ ][ ]
- *   [X][X][X][X]
- *   [ ][ ][ ][ ]
- *   [ ][ ][ ][ ]
- */
+
 public class PieceStick extends Pieza {
     public PieceStick(){ super(4,4); } // bounding box 4x4
 

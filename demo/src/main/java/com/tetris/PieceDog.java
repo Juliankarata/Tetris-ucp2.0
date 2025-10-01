@@ -1,20 +1,5 @@
-// File: src/main/java/com/tetris/PieceDog.java
 package com.tetris;
 
-/**
- * Pieza Z (apodada "perro").
- * Bounding box de 3x3.
- *
- * Orientaciones:
- * - 0 y 2: Z horizontal
- *   [ ][X][X]
- *   [X][X][ ]
- *
- * - 1 y 3: Z vertical
- *   [X][ ]
- *   [X][X]
- *   [ ][X]
- */
 public class PieceDog extends Pieza {
     public PieceDog(){ super(3,3); }
 
