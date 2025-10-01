@@ -1,16 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.tetris.TestGanar
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.022 s <<< FAILURE! -- in com.tetris.TestGanar
-com.tetris.TestGanar.tetrisGanaAlEliminarDosLineasConUnaIHorizontal -- Time elapsed: 0.017 s <<< FAILURE!
-org.opentest4j.AssertionFailedError: Debe acumular 2 líneas eliminadas al completar las dos filas ==> expected: <2> but was: <1>
-	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
-	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
-	at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
-	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:150)
-	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:563)
-	at com.tetris.TestGanar.tetrisGanaAlEliminarDosLineasConUnaIHorizontal(TestGanar.java:45)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
-
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in com.tetris.TestGanar
