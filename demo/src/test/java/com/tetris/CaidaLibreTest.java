@@ -108,20 +108,6 @@ public class CaidaLibreTest {
         assertTrue(rotado, "La pieza debería rotar dentro de los límites del tablero");
     }
 
-
-
-   @Test
-public void testRotacionIndependienteDelCicloDeJuego() {
-    Board tablero = new Board(5, 5);      // independiente del ciclo del juego
-
-    Pieza piezaI = new PieceStick();
-    tablero.ponerPiezaActual(piezaI);
-
-    boolean rotado = tablero.rotarPiezaActual();
-    assertTrue(rotado, "La pieza debería rotar dentro de los límites del tablero");
-}
-
-
     @Test
     public void testMoverIzquierdaYDerecha() {
         Juego juego = new Juego(6, 6);

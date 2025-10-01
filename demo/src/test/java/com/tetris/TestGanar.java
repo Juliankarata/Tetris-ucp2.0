@@ -7,28 +7,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Random;
 
-/**
- * Tests de alto nivel: “ganar” (completar líneas) y “fallar a propósito” (game over al iniciar).
- */
-public class TetrisWinAndFailureTest {
-
-    /** Random determinista secuencial: va devolviendo valores de una cola en cada nextInt(bound). */
-    static class FakeRandom extends Random {
-        private final Deque<Integer> queue = new ArrayDeque<>();
-        FakeRandom enqueue(int... values) {
-            for (int v : values) queue.addLast(v);
-            return this;
-        }
-        @Override
-        public int nextInt(int bound) {
-            if (queue.isEmpty()) return 0; // fallback
-            int v = queue.removeFirst();
-            // por seguridad, lo llevamos al rango [0, bound)
-            if (v < 0) v = 0;
-            if (v >= bound) v = v % bound;
-            return v;
-        }
-    }
+class TestGanar{
 
     @Test
     void tetrisGanaAlEliminarDosLineasConUnaIHorizontal() {
@@ -87,7 +66,7 @@ public class TetrisWinAndFailureTest {
     }
 
     @Test
-    void tetrisFallaAlIniciarCuandoNoHayEspacioParaSpawnear() {
+    void tetrisFallaAlIniciar() {
         Board board = new Board(4, 4);
         Reloj reloj = new Reloj();
         // No importa la pieza, ninguna entra si la fila 0 está llena y la 1 también en parte
