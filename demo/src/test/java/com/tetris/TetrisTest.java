@@ -34,7 +34,7 @@ public class TetrisTest {
     }
 
     @Test
-    void rotarIzqDerCambianOrientacionYVuelvenAlOrigen() {
+    void rotarCambiaOrientacionYVuelveOrigen() {
         Tetris t = new Tetris(10, 20);
         t.start();
 
@@ -52,7 +52,7 @@ public class TetrisTest {
     }
 
     @Test
-    void stateDevuelveCopiaDeLaGrillaNoUnaVistaViva_es() {
+    void stateDevuelveCopiaDelboard() {
         Tetris t = new Tetris(6, 8);
         t.start();
 

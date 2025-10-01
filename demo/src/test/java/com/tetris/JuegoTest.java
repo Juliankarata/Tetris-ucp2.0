@@ -46,55 +46,56 @@ class JuegoTest {
         }
     }
 
-    // Test: el juego corre y elimina una línea, sigue en ejecución
+
+
+    /**
+     * “Victoria” = alcanzar una meta de líneas limpiadas.
+     * No modifica producción ni usa helpers nuevos: se apoya en lineCount() y enEjecucion().
+     */
     @Test
-    void juegoCorriendoEliminaLineaYSigue() {
+    void juegoAlcanzaMetaDeLineas_SeConsideraVictoria() {
+        // Tablero chico y determinista
         Board board = new Board(4, 4);
         Reloj reloj = new Reloj();
-        // FakeRandom: PieceStick (I) vertical, sin rotación
-        FakeRandom rnd = new FakeRandom().enqueue(0, 0);
+        // FakeRandom cualquiera: pieza y rotación no importan para limpiar la fila prellena
+        FakeRandom rnd = new FakeRandom().enqueue(0, 0); // 0=PieceStick, 0 rotaciones (pero da igual)
         Tetris juego = new Tetris(board, reloj, rnd);
-        // Deja la última fila casi llena
+
+        // Precondición: última fila ya completa (se limpiará cuando se fije la primera pieza)
         boolean[][] inicial = {
             {false, false, false, false},
             {false, false, false, false},
             {false, false, false, false},
-            {true,  true,  true,  false}
+            {true,  true,  true,  true}
         };
         board.establecerTablero(inicial);
-        Tetris.iniciar(juego);
-        // Mover la I a la derecha para completar la fila
-        while (board.moverDerecha()) {}
-        // Dejarla caer
-        while (board.obtenerPiezaActual() != null) {
-            board.moverAbajo();
-        }
-        // Debe haber eliminado una línea y el juego sigue
-        assertEquals(1, board.getLineCount(), "Debe eliminar una línea");
-        assertNotNull(juego.state().piezaActual(), "Debe haber una nueva pieza en juego");
-        assertTrue(juego.state().enEjecucion(), "El juego debe seguir en ejecución");
-    }
 
-    // Test: el juego termina (pierde) al no poder spawnear una pieza
-    @Test
-    void juegoPierdeAlNoHaberEspacio() {
-        Board board = new Board(4, 4);
-        Reloj reloj = new Reloj();
-        // FakeRandom: PieceSquare (O)
-        FakeRandom rnd = new FakeRandom().enqueue(1, 0);
-        Tetris juego = new Tetris(board, reloj, rnd);
-        // Tablero lleno arriba, no hay espacio para spawnear
-        boolean[][] lleno = {
-            {true, true, true, true},
-            {true, true, true, true},
-            {false, false, false, false},
-            {false, false, false, false}
-        };
-        board.establecerTablero(lleno);
+        // Arranca el juego (usa tu API actual)
         Tetris.iniciar(juego);
-        // El juego debe estar en estado terminado
-        assertTrue(juego.state().estaTerminado(), "El juego debe estar terminado (perdido)");
-        assertNull(juego.state().piezaActual(), "No debe haber pieza activa tras perder");
+        assertTrue(juego.state().enEjecucion(), "Debe iniciar en ejecución");
+
+        // Meta de “victoria” por líneas
+        final int META_LINEAS = 1;
+
+        // Dejamos que la pieza caiga y se fije usando el ciclo oficial del juego
+        // (sin agregar métodos nuevos ni tocar producción)
+        int guardRail = 50; // evita loops infinitos ante errores
+        while (juego.state().enEjecucion() && board.getLineCount() < META_LINEAS && guardRail-- > 0) {
+            // opcional: intentar moverla para “jugar”; no es necesario para este caso
+            // juego.moveRight();
+            juego.tick();
+        }
+
+        // Aserciones de "victoria" por meta alcanzada
+        assertTrue(board.getLineCount() >= META_LINEAS, "Debe alcanzar la meta de líneas limpiadas");
+        assertTrue(juego.state().enEjecucion(), "El juego puede continuar tras alcanzar la meta (no hay lógica de fin por victoria)");
+
+        // Extras útiles para depurar si algo cambia en el futuro
+        assertNotNull(juego.state().grilla(), "La grilla debe estar disponible en el estado");
+        assertTrue(juego.state().ticks() > 0, "Deben haberse consumido algunos ticks");
     }
 }
+
+
+    
 

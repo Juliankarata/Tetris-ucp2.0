@@ -13,7 +13,7 @@ class RelojTest {
     }
 
     @Test
-    void tickIncrementaEnUno_es() {
+    void tickIncrementaEnUno() {
         Reloj r = new Reloj();
         //Se aplica el constructor, objeto reloj, y este mismo posee el componente de tick
         r.tick();
@@ -23,7 +23,7 @@ class RelojTest {
     }
 
     @Test
-    void resetVuelveACero_es() {
+    void resetVuelveACero() {
         Reloj r = new Reloj();
         r.tick(); r.tick(); r.tick();
         assertEquals(3, r.getTicks());

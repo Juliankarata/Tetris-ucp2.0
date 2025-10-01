@@ -1,6 +1,7 @@
 package com.tetris;
 
 import java.util.Random;
+import java.util.function.BooleanSupplier;
 
 /**
  * Fachada principal del juego (Tetris + Juego unificados).
@@ -85,7 +86,11 @@ public static void iniciar(Tetris self) {
         int lineCount,
         int ticks,
         boolean enEjecucion
-    ) {}
+    ) {
+
+        public BooleanSupplier estaTerminado() {
+            throw new UnsupportedOperationException("Unimplemented method 'estaTerminado'");
+        }}
 
     // --- Generación de piezas ---
     /** Método público útil para tests de aleatoriedad. */

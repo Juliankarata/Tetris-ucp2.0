@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class CaidaLibreTest {
 
-    // --- Helpers ---
     // Método auxiliar que deja caer la pieza actual hasta que se fije (piezaActual pasa a null)
     private void dejarCaerPieza(Board tablero) {
         // Mientras haya una pieza actual en el tablero
@@ -15,7 +14,6 @@ public class CaidaLibreTest {
         }
     }
 
-    // --- Tests originales ---
     @Test
     public void piezaOCaidaLibre() {
         // Crea un juego Tetris con tablero de 4x6
@@ -221,7 +219,7 @@ public class CaidaLibreTest {
     }
 
     @Test
-    public void rotacionBloqueadaPorBorde_Palo() {
+    public void rotacionBloqueadaPorBorde_stick() {
         // Crea un juego Tetris con tablero de 4x4
         Tetris juego = new Tetris(4, 4);
         Board tablero = juego.getTablero();
