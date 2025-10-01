@@ -4,8 +4,7 @@ package com.tetris;
 /**
  * Reloj lógico simple.
  * - Cada tick() avanza un paso en la simulación.
- * - No mide tiempo real, solo cuenta "pasos" lógicos.
- */
+
 public class Reloj {
     private int ticks = 0; // contador de ticks acumulados
 
