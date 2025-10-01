@@ -94,19 +94,21 @@ public class CaidaLibreTest {
         assertArrayEquals(esperado[3], tableroResultante[3], "Fila 3 incorrecta");
     }
 
-    // --- Tests nuevos ---
-
     @Test
-    public void testRotacionDentroDelTablero() {
+    public void testRotacionDentroDelTablero_Stick() {
         Juego juego = new Juego(5, 5);
         Board tablero = juego.getTablero();
 
         Pieza piezaI = new PieceStick();
         tablero.ponerPiezaActual(piezaI);
 
-        boolean rotado = tablero.rotarPiezaActual();
+        // Usar el método que SÍ existe en tu Board
+        boolean rotado = tablero.rotarPiezaActualDerecha(); // o tablero.rotarActualDerecha();
+
         assertTrue(rotado, "La pieza debería rotar dentro de los límites del tablero");
     }
+
+
 
    @Test
 public void testRotacionIndependienteDelCicloDeJuego() {
@@ -188,4 +190,27 @@ public void testGameOverCuandoNoCabeLaPieza_conBoolean() {
     assertNull(tablero.obtenerPiezaActual(), "No debe quedar piezaActual si el spawn falló");
 }
 
+
+
+@Test
+public void testRotacionBloqueadaPorBorde_Stick() {
+    Juego juego = new Juego(4, 4);
+    Board tablero = juego.getTablero();
+
+    Pieza piezaI = new PieceStick();
+    tablero.ponerPiezaActual(piezaI);
+
+    // Empujamos la pieza hacia la derecha hasta donde se pueda
+    while (tablero.moverDerecha()) {}
+
+    // En 4x4, rotar a horizontal desde el borde derecho no debería caber ni con kicks ±2
+    boolean rotado = tablero.rotarPiezaActualDerecha();
+    assertFalse(rotado, "No debería rotar si ni siquiera con kicks ±2 entra en el tablero");
 }
+
+
+
+
+}
+
+
