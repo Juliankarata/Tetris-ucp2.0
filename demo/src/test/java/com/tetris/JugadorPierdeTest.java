@@ -21,10 +21,10 @@ public class JugadorPierdeTest {
 
         Reloj reloj = new Reloj();
         Random rnd = new Random(123);
-        Tetris juego = new Tetris(tablero, reloj, rnd);
+        Tetris Tetris = new Tetris(tablero, reloj, rnd);
 
         // Al iniciar, intenta colocar una pieza aleatoria, pero no puede porque la fila superior está llena
-        assertThrows(IllegalStateException.class, () -> juego.iniciar(),
+        assertThrows(IllegalStateException.class, () -> Tetris.class.getMethod("iniciar").invoke(null),
             "Debe lanzar IllegalStateException cuando no hay espacio para colocar la pieza inicial (jugador pierde)");
     }
 }

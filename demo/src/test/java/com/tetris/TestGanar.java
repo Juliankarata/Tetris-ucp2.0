@@ -35,7 +35,7 @@ class TestGanar{
         // Iniciar (spawnea I sin rotación; en nuestra I sin rotación = vertical.
         // PERO ¡OJO!: nuestra PieceStick define vertical cuando orientacion%2==0, horizontal cuando ==1.
         // Como pedimos 0 rotaciones, está vertical. La vamos a rotar a horizontal manualmente.
-        juego.iniciar();
+        Tetris.iniciar(juego);
         assertNotNull(board.obtenerPiezaActual(), "Debe existir pieza al iniciar");
 
         // Rotar a horizontal (derecha) y mover a la derecha para cubrir los huecos finales (columna 3).
@@ -83,7 +83,7 @@ class TestGanar{
         board.establecerTablero(bloqueado);
 
         // iniciar intenta spawnear; al no poder, enEjecucion queda false y no hay piezaActual
-        juego.iniciar();
+        Tetris.iniciar(juego);
 
         assertFalse(juego.isEnEjecucion(), "Si no hay espacio para spawnear, el juego debería quedar detenido (game over).");
         assertNull(board.obtenerPiezaActual(), "No debe haber pieza activa si no pudo spawnear.");

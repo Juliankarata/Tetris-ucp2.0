@@ -31,17 +31,18 @@ public class Tetris {
         this.enEjecucion = false;
     }
 
-    // --- Ciclo de vida ---
-    /** Inicia el juego (spawnea primera pieza si hay espacio). */
-    public void start() { iniciar(); }
-    public void iniciar() {
-        if (enEjecucion) return;
-        enEjecucion = true;
-        reloj.reset();
-        if (!crearYColocarPiezaAleatoria()) {
-            enEjecucion = false; // game over instantáneo si no entra
-        }
+
+public void start() { iniciar(this); }
+
+public static void iniciar(Tetris self) {
+    if (self.enEjecucion) return;
+    self.enEjecucion = true;
+    self.reloj.reset();
+    if (!self.crearYColocarPiezaAleatoria()) {
+        self.enEjecucion = false;
     }
+}
+
 
     public void finalizar() { enEjecucion = false; }
 

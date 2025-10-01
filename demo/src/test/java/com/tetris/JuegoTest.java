@@ -19,7 +19,7 @@ class JuegoTest {
         Tetris juego = new Tetris(b, r, rnd);
 
         assertNull(b.obtenerPiezaActual());
-        juego.iniciar();
+        juego.iniciar(juego);
         assertNotNull(b.obtenerPiezaActual(), "Al iniciar debe haber una pieza actual");
 
         int t0 = r.getTicks();
